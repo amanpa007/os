@@ -5,6 +5,8 @@ arriving in the billing counter. The accountant gives the preference to
 that student who has maximum number of gifts. 
 Create a C or Java program to define order of billed students?*/
  
+ // case : 1) it gives higher priority to the students who have more no of gifts .
+ //case : 2) if they have same no of gifts the the student(process)having less id is given priority.
 #include <stdio.h> 
 
 	int i,t,j,n;           //variable declaration
