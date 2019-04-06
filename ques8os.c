@@ -1,9 +1,16 @@
+/*Ques.Sudesh Sharma is a Linux expert who wants to have an online system where he can handle student queries. 
+Since there can be multiple requests at any time he wishes to dedicate a fixed amount of time to every 
+request so that everyone gets a fair share of his time. He will log into the system from 10am to 12am only.
+He wants to have separate requests queues for students and faculty. Implement a strategy for the same.
+The summary at the end of the session should include the total time he spent on handling queries 
+and average query time.*/
+
 #include<stdio.h>
 
-struct scheduling{
-	int p_id;
-	int a_t;
-	int b_t;
+struct schedulingg{
+	int p_id;//process id
+	int a_t;//arrival time
+	int b_t;//brust time
 	int c_t;//completion time
 	int r_bt;
 }f[100], s[100], m[100];
@@ -12,20 +19,18 @@ int n, fc=0, sc=0, mc=0;
 int Quanta;
 
 
-void rr(){
+void rr(){//round robin process
 	int t= m[0].a_t, mark=0, cc=0, i, rc;
 	while(t!=120 && cc!=mc){
 		for(i=0; i<=mark; i++){
 			if(m[i].r_bt > Quanta){
 				t += Quanta;
-				m[i].r_bt -= Quanta;
-			}
-			else if(m[i].r_bt <=Quanta && m[i].r_bt !=0){
+				m[i].r_bt -= Quanta;}
+			else if(m[i].r_bt <=Quanta && m[i].r_bt !=0){           //  brust time is less than quanta
 				t += m[i].r_bt;
 				m[i].r_bt =0;
 				m[i].c_t = t;
-				cc++;
-			}
+				cc++;}
 			else;
 		}
 		int str = mark+1;
@@ -37,24 +42,24 @@ void rr(){
 	}	
 }
 
-void scheduling(){
+void scheduling(){//priority to faculty is given
 	int isc=0, ifc= 0, min, flag;
 	if( fc!=0  && sc!=0){
 		while(isc<sc && ifc<fc){
-			if(f[ifc].a_t == s[isc].a_t){
-				m[mc] = f[ifc];
+			if(f[ifc].a_t == s[isc].a_t){                          //priority of faculty is more than students
+				m[mc] = f[ifc];                                    //same arrival time of processes
 				mc++;
 				ifc++;
 				m[mc]= s[isc];
 				mc++;
 				isc++;
 			}
-			else if(f[ifc].a_t < s[isc].a_t){
+			else if(f[ifc].a_t < s[isc].a_t){                         //arriavl of faculty is before student
 				m[mc]= f[ifc];
 				mc++;
 				ifc++;
 			}
-			else if(f[ifc].a_t > s[isc].a_t){
+			else if(f[ifc].a_t > s[isc].a_t){                         //arrival of faculty is after student
 				m[mc]= s[isc];
 				mc++;
 				isc++;
@@ -93,11 +98,11 @@ void scheduling(){
 		}
 	}
 	else {
-		printf("\n THERE ARE NO VALID JOBS \n");
+		printf("\n THERE ARE NO VALID JOBS \n");//none of the conditions match
 	}
 }
 
-void display(){
+void display(){                     //diaplay on the console
 	int i=0, total=0, sum=0; 
 	double avg;
 	printf("\nEXECUTION PROCESS.........\n");
@@ -105,16 +110,17 @@ void display(){
 	for(i; i<mc; i++){
 		printf("\n%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t\t%d",
 		m[i].p_id, (m[i].a_t+1000), m[i].b_t, (m[i].c_t+1000), (m[i].c_t-m[i].a_t), ((m[i].c_t-m[i].a_t)- m[i].b_t));
+		//printing the details 
 		total= m[i].c_t;
 		sum+= (m[i].c_t-m[i].a_t);
 	}
 	avg = sum/mc;
-	printf("\n\nTOTAL TIME FOR ALL QUERIES  : %d", total);
+	printf("\n\nTOTAL TIME FOR ALL QUERIES  : %d", total);// total time
 	printf("\nAVERAGE TIME FOR QUERY        : %lf", avg);
 	printf("\nEXECUTION OF PROCESS COMPLETED...............");
 }
 
-void getdata(){
+void getdata(){        //taking input from user 
 	int match, i, arr_t;
 	printf("TOTAL NUMBER OF QUERIES :- "); scanf("%d", &n);
 	if(n==0) { printf("\n NO QUERIES ARE THERE \n"); }
@@ -123,22 +129,23 @@ void getdata(){
 		printf("\nENTER :-\n1-FACULTY \n2-STUDENT \n");
 		for(i=0; i<n; i++){
 			printf("\nTYPE OF JOB  (1/2): "); scanf("%d", &match);
-			if(match==1){
+			if(match==1){                                           //details of faculty process
 				printf("QUERY ID NO.  : "); scanf("%d", &f[fc].p_id);
 				printf("ARRIVAL TIME  : "); scanf("%d", &arr_t);
-				if(arr_t<1000 || arr_t>1200){
+				if(arr_t<1000 || arr_t>1200 )
+				{
 					printf("\nPLEASE ENTER THE CORRECT TIME ");
 					getdata();
 				}
 				else{f[fc].a_t= arr_t-1000;}
 				printf("RESOLVING TIME  : "); scanf("%d", &f[fc].b_t);	 f[fc].r_bt= f[fc].b_t; 
 				fc++;
-			} else{
+			} else{                                                         //details of student process
 				printf("QUERY ID NO.   : "); scanf("%d", &s[sc].p_id);
 				printf("ARRIVAL TIME   : "); scanf("%d", &arr_t); 
 				if(arr_t<1000 || arr_t>1200){
 					printf("\nPLEASE ENTER THE CORRECT TIME  \n");
-					getdata();
+					getdata(); 
 				}
 				else {s[sc].a_t= arr_t-1000; }
 				printf("RESOLVING TIME   : "); scanf("%d", &s[sc].b_t);	 s[sc].r_bt= s[sc].b_t;
